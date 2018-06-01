@@ -1,0 +1,83 @@
+doctype html
+html
+	head
+		title Inicia sesión
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		style.
+			*{
+				-webkit-transition-duration:1s;
+				     -o-transition-duration:1s;
+				        transition-duration:1s;
+				font-family: sans-serif;
+				-webkit-box-sizing: border-box;
+				        box-sizing: border-box;
+			}
+			body{
+				margin: 0;
+				padding: 0;
+				background-color:white;
+				text-align: center;
+				display:-webkit-box;
+				display:-ms-flexbox;
+				display:flex;
+				-webkit-box-pack:center;
+				    -ms-flex-pack:center;
+				        justify-content:center;
+				-webkit-box-align:center;
+				    -ms-flex-align:center;
+				        align-items:center;
+				min-height:100vh;
+				background-color:rgb(0,122,204);
+			}
+			form{
+				display:inline-block;
+				font-family: sans-serif;
+				color:#444;
+				font-size:1.4em;
+				padding: 3em;
+				text-align: center;
+				border:.3em solid darkorange;
+				border-radius:1em;
+				background-color:white;
+			}
+			input{
+				border:4px solid #ccc;
+				padding:.3em;
+			}
+			input:focus{
+				border:4px solid #007acc;
+			}
+			input[type='submit']{
+				border:4px solid silver;
+				margin-top:1em;
+				background-color:silver;
+			}
+			input[type='submit']:hover{
+				background-color:#007acc;
+			}
+			h2{
+				margin-top:0;
+			}
+			@media(max-width: 700px){
+				form{font-size: 1em;}
+			}
+			@media(max-height: 800px){
+				form{font-size: .9em;}
+			}
+	body
+		form(method="POST")
+			if !failedAttempt
+				h2 Iniciar Sesión
+			else
+				h4 Fallo, intenta de nuevo
+			label(for="email") Email
+			br
+			input(type="email" name="email" required)
+			br
+			label(for="passw") Contraseña
+			br
+			input(type="password" name="password" required)
+			br
+			input(type="submit" value="submit")

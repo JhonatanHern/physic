@@ -1,0 +1,49 @@
+doctype html
+html
+	head
+		title Serofca
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		style.
+			*{
+				transition-duration:1s;
+				box-sizing:border-box;
+			}
+			body{
+				background: rgba(255,255,255,1);
+				background: -moz-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 0%, rgba(93,135,240,1) 28%, rgba(255,153,0,1) 71%, rgba(255,255,255,1) 100%);
+				background: -webkit-gradient(left top, right top, color-stop(0%, rgba(255,255,255,1)), color-stop(0%, rgba(255,255,255,1)), color-stop(28%, rgba(93,135,240,1)), color-stop(71%, rgba(255,153,0,1)), color-stop(100%, rgba(255,255,255,1)));
+				background: -webkit-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 0%, rgba(93,135,240,1) 28%, rgba(255,153,0,1) 71%, rgba(255,255,255,1) 100%);
+				background: -o-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 0%, rgba(93,135,240,1) 28%, rgba(255,153,0,1) 71%, rgba(255,255,255,1) 100%);
+				background: -ms-linear-gradient(left, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 0%, rgba(93,135,240,1) 28%, rgba(255,153,0,1) 71%, rgba(255,255,255,1) 100%);
+				background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 0%, rgba(93,135,240,1) 28%, rgba(255,153,0,1) 71%, rgba(255,255,255,1) 100%);
+				filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff', GradientType=1 );
+			}
+			section{
+				color: white;
+				text-shadow: 1px 1px black;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				max-width: 100vw;
+				max-height: 100vh;
+				-webkit-transform:translate(-50%,-50%);
+				-ms-transform:translate(-50%,-50%);
+				-moz-transform:translate(-50%,-50%);
+				-o-transform:translate(-50%,-50%);
+				transform:translate(-50%,-50%);
+				font-size: 1em;
+				box-shadow: 10px 10px 5px gray;
+				background-color:rgba(255,255,255,.5);
+				padding: 1em;
+			}
+			h1{
+				text-shadow: 2px 2px black;
+				font-size: 2em;
+			}
+	body
+		section
+			h1 Lo sentimos, tenemos inconvenientes internos.
+			|=message?message:'';
+			|puedes escribirnos a sistemas.serofca@gmail.com

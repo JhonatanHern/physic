@@ -1,0 +1,106 @@
+doctype html
+html
+	head
+		title Serofca
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		style.
+			body{
+				margin: 0;
+				padding: 0;
+				overflow-x: hidden;
+				animation-name: fadeIn;
+				animation-duration: 2s;
+				animation-timing-function: linear;
+			}
+			*{
+				transition-duration:1s;
+				font-family: sans-serif;
+				box-sizing: border-box;
+			}
+			section#cover{
+				overflow: hidden;
+			}
+			section#cover img:hover{
+				opacity:1;
+				transform: scale(.8);
+				cursor: pointer;
+			}
+			section#cover img{
+				transform: scale(.7);
+				width:100vw;
+			}
+			main{
+				margin-top: 5vh;
+				margin-bottom: 15vh;
+			}
+			main > a{
+				color:white;
+				text-decoration: none;
+				padding: .9em;
+				text-align: center;
+				display: inline-block;
+				background-color: #007acc;
+				font-size: 1.3em;
+				font-weight: lighter;
+				border-radius: 5px;
+				vertical-align: middle;
+			}
+			@media(max-width:999px){/*little*/
+				main > a{
+					width:80vw;
+					margin-left: 10vw;
+					margin-top: 10vw;
+				}
+				main{
+					margin-bottom: 20vh;
+				}
+				#f span{display: none;}
+			}
+			@media(min-width:1000px){/*big*/
+				main{
+					display: flex;
+					justify-content: space-around;
+				}
+				main:hover{
+					font-size: 1.5em;
+				}
+				main > a:hover{
+					background-color: #fc9300;
+				}
+				#f:hover{
+					background-color: #007acc;
+					font-size: 1.5em;
+				}
+			}
+			#f{
+				color:white;
+				text-decoration: none;
+				width: 100vw;
+				text-align: right;
+				padding: .8em;
+				position: fixed;
+				top:100%;
+				transform: translateY(-100%);
+				background-color: darkorange;
+			}
+			@-webkit-keyframes fadeIn {
+			    from {opacity: 0}
+			    to {opacity: 1}
+			}
+
+			/* Standard syntax */
+			@keyframes fadeIn {
+			    from {opacity: 0}
+			    to {opacity: 1}
+			}
+	body
+		section#cover
+			a(href="#")
+				img(src='lpng.png')
+		main
+			a(href="#") Formación
+			a(href="http://www.serofca.com") Quienes somos
+		a#f(href="/serofcaLogin/") Trabajas con nosotros? 
+			span pulsa aquí

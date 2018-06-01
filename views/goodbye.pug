@@ -1,0 +1,54 @@
+doctype html
+html
+	head
+		title Serofca
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		style.
+			*{
+				transition-duration:1s;
+				font-family: sans-serif;
+			}
+			body{
+				background:#04b2f7;
+				background:-webkit-linear-gradient(0deg#04b2f7 10%,#f7ae04 35%,#f7ae04 75%, #04b2f7 100%);
+				background:-o-linear-gradient(0deg#04b2f7 10%,#f7ae04 35%,#f7ae04 75%, #04b2f7 100%);
+				background:-moz-linear-gradient(0deg#04b2f7 10%,#f7ae04 35%,#f7ae04 75%, #04b2f7 100%);
+				background:linear-gradient(0deg#04b2f7 10%,#f7ae04 35%,#f7ae04 75%, #04b2f7 100%);
+			}
+			section{
+				color: white;
+				text-shadow: 1px 1px black;
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				max-width: 100vw;
+				max-height: 100vh;
+				-webkit-transform:translate(-50%,-50%);
+				-ms-transform:translate(-50%,-50%);
+				-moz-transform:translate(-50%,-50%);
+				-o-transform:translate(-50%,-50%);
+				transform:translate(-50%,-50%);
+				font-size: 1.4em;
+				box-shadow: 10px 10px 5px gray;
+				background-color:rgba(255,255,255,.3);
+				padding: 1em;
+			}
+			h1{
+				font-size: 10vw;
+				text-shadow: 2px 2px black;
+				margin-bottom: 1px;
+			}
+			@media(max-width: 700px){
+				section{font-size: 1em;}
+			}
+	body
+		section
+			h1 SEROFCA
+			h4 Esperamos verte pronto, hasta luego!
+			|puedes volver a ingresar para:
+			br
+			a(href="#") estudiante (cursos)
+			br
+			a(href="/serofcaLogin/") empresa

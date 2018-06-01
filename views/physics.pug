@@ -1,0 +1,90 @@
+doctype html
+html
+	head
+		title serofca-app
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		style.
+	body
+		nav
+			span= email
+			ul
+				li#Modificar Modificar
+				li#Crear Crear
+				li#Eliminar Eliminar
+				li
+					a(href="/logout") Cerrar Sesión
+		section#principal
+			select#clinic
+				-for(c in clinics)
+					option c
+			section.tablsec
+				h2 Equipos
+				table
+					thead
+					tbody
+			section.tablsec
+				h2 Salas
+				table
+					thead
+					tbody
+			button#uploadInf
+			button#uploadDos
+			select#years
+					-var d = new Date().toLocaleDateString().split("/");
+					-var year = d[2]-0;
+					-var month = d[1]-0;
+					option= ""+year+"-"+month
+					-for(let i = 0 ; i < 3 ; i++)
+						-month=(month-1===0)?12:month-1;
+						-year=(month===12)?year-1:year;
+						option= ""+year+"-"+month
+			table
+				thead
+					tr
+						td Permisologia
+						td Fecha Ult.
+						td Fecha Exp.
+				tbody
+					tr
+						td conformidad sanitaria del local
+						td= clinica.ultcsl
+						td= clinica.vencsl
+					tr
+						td rimfri
+						td= clinica.ultrim
+						td= clinica.vencsl
+					tr
+						td permiso sanitario ambiente radiológico
+						td= clinica.ultpsr
+						td= clinica.venpsr
+					tr
+						td permiso sanitario funcionamiento de los equipos
+						td= clinica.ultpfe
+						td= clinica.venpfe
+			div#contCot
+				| Cotización
+				button#modificaCotizacion
+			textarea(disabled='true')
+			div#rojo
+			div#amarillo
+
+			div#meses
+				span#m1 E
+				span#m2 F
+				span#m3 M
+				span#m4 A
+				span#m5 M
+				span#m6 J
+				span#m7 J
+				span#m8 A
+				span#m9 S
+				span#m10 O
+				span#m11 N
+				span#m12 D
+			input#anio
+			button#getInforme Informe
+			button#getDosimet Dosimetría
+		footer
+			|SEROFCA

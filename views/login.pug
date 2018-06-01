@@ -1,0 +1,61 @@
+doctype html
+html
+	head
+		title Inicia sesión
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		style.
+			*{
+				transition-duration:1s;
+				font-family: sans-serif;
+				box-sizing: border-box;
+			}
+			body{
+				margin: 0;
+				padding: 0;
+				background-color:white;
+				text-align: center;
+			}
+			form{
+				display:inline-block;
+				font-family: sans-serif;
+				color:#444;
+				margin:1em;
+				margin-top:10vh;
+				padding: 3em;
+				text-align: center;
+				border:.3em solid darkorange;
+				border-radius:1em;
+			}
+			input{
+				border:4px solid #ccc;
+				padding:.3em;
+			}
+			input:focus{
+				border:4px solid #007acc;
+			}
+			input[type='submit']{
+				border:4px solid silver;
+				margin-top:1em;
+				background-color:silver;
+			}
+			input[type='submit']:hover{
+				background-color:#007acc;
+			}
+			h2{
+				margin-top:0;
+			}
+	body
+		form(method="POST" action=target)
+			h2 Iniciar Sesión
+			label(for="email") Email
+			br
+			input(type="email" name="email")
+			br
+			label(for="passw") Contraseña
+			br
+			input(type="password" name="password")
+			br
+			input(type="submit" value="submit")
+		footer

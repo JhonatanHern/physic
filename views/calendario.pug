@@ -1,0 +1,173 @@
+doctype html
+html
+	head
+		title Calendario
+		style.
+			 #inputs {
+				display:flex;
+				justify-content: space-around;
+				position: relative;
+				padding: 1em;
+			}
+			#inputs input {
+				font-size: 1.3em;
+				width: 30%;
+			}
+			.calendar {
+				font-family: 'Century Gothic',sans-serif;
+				width: 90%;
+				margin-left: 5%;
+				margin-bottom:5em;
+			}
+			.calendar thead th, .calendar thead td, .calendar tbody th, .calendar tbody td {
+				text-align: center;
+				padding: .8em;
+				font-size:.7em;
+				vertical-align:sub;
+			}
+			.calendar thead th {
+				background-color: #75a3ff;
+			}
+			.calendar tbody td {
+				border: 1px solid #ddd;
+				position: relative;
+				padding-top: 0;
+				animation-name: rotY;
+				animation-duration: 1s;
+				animation-timing-function: ease-in-out;
+			}
+			.calendar tbody td p{
+				border-top: 1px solid #ddd;
+			}
+			.calendar tbody td.dead {
+				background-color: #ddd;
+			}
+			.calendar tbody td label {
+				display: block;
+				width: 100%;
+				text-align: left;
+				color: gray;
+			}
+			@keyframes rotY {
+				from {
+					transform: rotateY(90deg);
+				}
+				to {
+					transform: rotateY(0deg);
+				}
+			}
+			.full-table{
+				width:80%;
+				overflow-x:auto;
+				border-collapse: collapse;
+				margin-top:3em;
+			}
+			.full-table td{
+				border:1px solid #ccc;
+			}
+			.full-table th{
+				border:1px solid #ccc;
+				background-color: #75a3ff;
+			}
+			.holder{
+				width:100%;
+				overflow:auto;
+				height:50vh;
+				border:3px solid gray;
+			}
+	body
+		section#inputs
+			input#year(type="number" placeholder="year" value="2018")
+			select#month
+				option(value="1") Enero
+				option(value="2") Febrero
+				option(value="3") Marzo
+				option(value="4") Abril
+				option(value="5") Mayo
+				option(value="6") Junio
+				option(value="7") Julio
+				option(value="8") Agosto
+				option(value="9") Septiembre
+				option(value="10") Octubre
+				option(value="11") Noviembre
+				option(value="12") Diciembre
+		table.calendar
+			thead
+				tr
+					th Domingo
+					th Lunes
+					th Martes
+					th Miércoles
+					th Jueves
+					th Viernes
+					th Sábado
+			tbody#calendar-body
+				tr
+					td
+					td
+					td
+					td
+					td
+					td
+					td 
+				tr
+					td
+					td
+					td
+					td
+					td
+					td
+					td 
+				tr
+					td
+					td
+					td
+					td
+					td
+					td
+					td 
+				tr
+					td
+					td
+					td
+					td
+					td
+					td
+					td 
+				tr
+					td
+					td
+					td
+					td
+					td
+					td
+					td 
+		section.holder
+			table.full-table
+				thead
+					tr
+						th nombre
+						th próxima visita
+						th not. visita (físico)
+						th llamada
+						th reporte actividades
+						th recibido m.castellanos
+						th enviado informe serofca
+						th recibido servicio
+						th enviado a clínica
+						th observaciones
+						th emails clínica
+				tbody#full-table
+					tr
+						td
+						td
+						td
+						td
+						td
+						td
+						td
+						td
+						td
+						td
+						td
+		script(src="/scripts/calendar.js")

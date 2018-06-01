@@ -1,0 +1,39 @@
+{
+	"nuevasTablas":{
+		"qcchasis":{
+			"marca"  : "CHAR(20)",
+			"modelo" : "CHAR(20)",
+			"tamano" : "CHAR(20)",
+			"ubi"    : "CHAR(20)",
+			"n"      : "CHAR(10)",
+			"eval1"  : "CHAR(1)",/*select*/
+			"obs1"   : "CHAR(20)",
+			"date1"  : "DATE",
+			"eval2"  : "CHAR(1)",
+			"obs2"   : "CHAR(20)",
+			"date2"  : "DATE",
+		},
+		"qcdisp":{
+			"tipo"   : "CHAR(20)",
+			"ubi"    : "CHAR(20)",
+			"n"      : "CHAR(10)",
+			"eval1"  : "CHAR(1)",
+			"obs1"   : "CHAR(20)",
+			"date1"  : "DATE",
+			"eval2"  : "CHAR(1)",
+			"obs2"   : "CHAR(20)",
+			"date2"  : "DATE",
+		},
+		"qcimagen":{
+			"tipo"   : "CHAR(20)",
+			"ubi"    : "CHAR(20)",
+			"n"      : "CHAR(10)",
+			"eval1"  : "CHAR(1)",
+			"obs1"   : "CHAR(20)",
+			"date1"  : "DATE",
+			"eval2"  : "CHAR(1)",
+			"obs2"   : "CHAR(20)",
+			"date2"  : "DATE",
+		}
+	}
+}

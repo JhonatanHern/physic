@@ -1,0 +1,24 @@
+doctype html
+html
+	head
+		title Vista de administrador
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		if error
+			h2 Ha ocurrido un error crítico, notifique al administrador de sistemas
+		else
+			h2 Seleccione al físico cuyos datos desea ver
+			select(id="selector")
+				!="<option disabled selected>Seleccionar Físico</option>"
+				-for(phy of data)
+					option(value=phy.id)!=phy.email
+		script.
+			document.getElementById('selector').addEventListener('change',e=>{
+				e.preventDefault()
+				let value = e.target.value
+				console.log(value)
+				e.target.innerHTML = e.target.innerHTML
+			})

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Buscador de clínicas</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style type="text/css">
+		*{
+			transition-duration: .3s;
+			animation: fadeIn 1s;
+		}
+		@keyframes fadeIn{
+			from{opacity: 0}
+			to{opacity: 1}
+		}
+		@-webkit-keyframes fadeIn{
+			from{opacity: 0}
+			to{opacity: 1}
+		}
+		body{
+			font-family: 'Century Gothic';
+			margin: 0;
+			background-color: white;
+			text-align: center;
+			width: 100%;
+		}
+		main{
+			margin-top: 2em;
+			width:80vw;
+			position: relative;
+			left:50%;
+			transform:translateX(-50%);
+		}
+		main  a{
+			text-decoration: none;
+			color:inherit;
+			margin-bottom: .5em;
+			font-weight: bolder;
+		}
+		main > h1{
+			font-weight: normal;
+			font-size: 3em;
+		}
+		#arts{
+			text-align: justify;
+			color: #333;
+		}
+		#arts div{
+			border: 1px solid #ccc;
+			padding: .5em;
+			margin-bottom: 1em;
+			box-shadow: 1px 1px 5px silver;
+			cursor: pointer;
+		}
+		#arts div:hover{
+			background-color: black;
+			color:white;
+			font-size: 1.2em;
+		}
+		#search,#back{
+			background-color:black;
+			color:white;
+			border:0px solid transparent;
+			padding:.3em;
+		}
+		#inp{
+			width: 100%;
+			display:flex;
+			justify-content: space-around;
+		}
+		#inp *{
+			flex-grow: 1;
+		}
+		#showData{
+			position: fixed;
+			left: 50%;
+			top:50%;
+			transform: translate(-50%,-50%);
+			max-height: 90vh;
+			max-width: 90vw;
+			overflow-y: auto;
+			padding: 1em;
+			background-color: white;
+			display: none;
+		}
+		#showData i{
+			padding: 1em;
+			position: relative;
+			display: block;
+			background-color: black;
+			color:white;
+			font-size: 1.2em;
+			cursor: pointer;
+			margin-bottom: 1em;
+			border-radius: 1em;
+		}
+	</style>
+</head>
+<body>
+	<main>
+		<h1>Buscador de clínicas</h1>
+		<div id=inp>
+			<button id="back" onclick="history.back()">Atrás</button>
+			<input type="text" id="text" placeholder="Buscar clínicas"/>
+			<button id="search" onclick="fetchSearch()">Buscar</button>
+		</div><br />
+		<section id=arts></section>
+	</main>
+	<section id="showData">
+	</section>
+	<script type="text/javascript">/*
+		function loadDoc() {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					alert(this.responseText);
+				}
+			};
+			xhttp.open("GET", "serofca/buscar", true);
+			xhttp.send();
+		}*/
+	</script>
+	<script type="text/javascript">
+		try{
+			window.onerror = function(error) {
+				alert(error)
+			}
+			var searchBox = document.getElementById('text'),
+				board = document.getElementById('arts'),
+				dataFrame = document.getElementById('showData'),
+				clinicas = null
+
+			var closeFrame = function() {
+				dataFrame.style.display = 'none'
+			}
+
+			var assignDivs = function() {
+				let divs = document.querySelectorAll('#arts > div')
+				divs.forEach(function(e) {
+					e.addEventListener('click',function() {
+						let rif = this.id
+						let actual = clinicas.filter( c => c.rif === rif )[0]
+						dataFrame.innerHTML = `
+							<i id="close">Cerrar</i>
+							<b>Nombre de Clínica:</b> ${actual.nombre}<br>
+							<b>rif:</b> ${actual.rif}<br><br>
+							<b>Conformidad Sanitaria del Local<br></b>
+							Último: ${actual.ultcsl?actual.ultcsl:'No Registrado'}<br>
+							Vence:  ${actual.vencsl?actual.vencsl:'No Registrado'}<br>
+							<b>RIMFRI<br></b>
+							Último: ${actual.ultrim?actual.ultrim:'No Registrado'}<br>
+							Vence:  ${actual.venrim?actual.venrim:'No Registrado'}<br>
+							<b>Permiso Sanitario Ambiente Radiológico<br></b>
+							Último: ${actual.ultpsr?actual.ultpsr:'No Registrado'}<br>
+							Vence:  ${actual.venpsr?actual.venpsr:'No Registrado'}<br>
+							<b>Permiso Sanitario Funcionamiento de los Equipos<br></b>
+							Último: ${actual.ultpfe?actual.ultpfe:'No Registrado'}<br>
+							Vence:  ${actual.venpfe?actual.venpfe:'No Registrado'}<br>
+
+							<b>Observaciones Generales<br></b>
+							${actual.observacion?actual.observacion:'No Registrado'}
+						`
+						dataFrame.style.display = 'block'
+						document.getElementById('close').addEventListener('click',closeFrame)
+					})
+				})
+			}
+			var fetchSearch = function(e) {
+				if (!searchBox.value) {
+					alert('escriba algo en el campo de búsqueda')
+					return
+				}
+				board.innerHTML=''
+				fetch('/serofca/buscar?s='+searchBox.value,{credentials:'include'}).then(function(res) {
+					return res.json()
+				}).then(function(array) {
+					clinicas = array
+					let content = ''
+					array.forEach(function(e) {
+						content += 
+						`
+							<div id="${e.rif}">
+								<b>${e.nombre}</b>
+								<br>${e.rif}
+							</div>
+						`
+					})
+					board.innerHTML = content
+					assignDivs()
+				}).catch(function(error) {
+					alert('Al parecer hubo un error procesando su petición, contacte al encargado de sistemas.');
+				})
+			}
+		}catch(e){
+			alert(e)
+		}
+	</script>
+</body>
+</html>

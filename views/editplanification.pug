@@ -1,0 +1,56 @@
+doctype html
+html
+	head
+		title 
+		style.
+			*{box-sizing:border-box;font-family:Century Gothic;transition-duration:.2s;}
+			body{margin:0;background-color:#ddd}
+			#black{display:none;top:0;left:0;position:fixed;height:100vh;width:100vw;background-color:rgba(0,0,0,.6);}
+			#black form{position:absolute;max-height:90vh;max-width:95vw;min-width:30vw;top:50%;left:50%;transform:translate(-50%,-50%);background-color:white;padding:1.5em;display:block;overflow-y:auto;border-radius:4em 0;}
+			#black input,#black textarea{width:100%;font-size:1.3em;margin-bottom:.5em;}
+			#selector{width:80%;margin-left:10%;padding:2em;background-color:white;min-height:100vh}
+			#selector div{padding:.5em;box-shadow:1px 1px 5px silver;cursor:pointer;margin-bottom:10px;position:relative;}
+			#selector div:hover{background-color:black;color:#fff;transform:scale(1.2)}
+	body
+		section#selector
+			h1 Buscar y Editar Clínicas
+			section#clinics
+		section#black
+			form
+				h2 Seleccionar
+				|Emails Clínica
+				br
+				input(placeholder='' name='emails')
+				|Próxima Visita
+				br
+				input(placeholder='YYYY-MM-DD' name='prox_visita')
+				|Not. Visita (físico)
+				br
+				input(placeholder='YYYY-MM-DD' name='not_visita_fisico')
+				|Llamada
+				br
+				input(placeholder='YYYY-MM-DD' name='llamada')
+				|Reporte Actividades
+				br
+				input(placeholder='' name='reporte_actividades')
+				|Recibido m.castellanos
+				br
+				input(placeholder='YYYY-MM-DD' name='recibido_mcast')
+				|Enviado Informe Serofca
+				br
+				input(placeholder='YYYY-MM-DD' name='enviado_informe_serofca')
+				|Recibido Servicio
+				br
+				input(placeholder='YYYY-MM-DD' name='recibido_servicio_serofca')
+				|Enviado a Clínica
+				br
+				input(placeholder='YYYY-MM-DD' name='enviado_centro_Salud')
+				|Observaciones
+				br
+				textarea(placeholder='observaciones' name='obs')
+				br
+				br
+				input(type='submit' value='Modificar')
+				br
+				br
+		script(src="/scripts/editplanification.js")
