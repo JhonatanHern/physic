@@ -500,7 +500,7 @@ router.post("/nuevoEquipo"   ,function (req,res) {//create for both
 			}
 			sql = "INSERT INTO equipos (serie,rif_clinica,id_encargado,nombre,marca,modelo,UltimoQc,ProxQc,sala,observaciones) VALUES ("+
 				mysql.escape(body.serial)+","+
-				(body.rif?mysql.escape(body.rif):"NULL")+","+
+				(body.rif_clinica?mysql.escape(body.rif_clinica):"NULL")+","+
 				(id?id:"NULL")+","+
 				(body.nombre?mysql.escape(body.nombre):"NULL")+","+
 				(body.marca?mysql.escape(body.marca):"NULL")+","+

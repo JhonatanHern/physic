@@ -23,8 +23,8 @@ app.set('view engine', 'pug')
 app.use(cookieSession({
 	name:"session",
 	keys:[
-		"fjgvadshkfgasdjkfjoasdghwevbdaehbndfaweghfuiwehdfuihedfuuetywt35687epgh'sjt",
-		'VSERUOHFAJKXDOASDUYHUIOWE4JHR79WE6DY34R6T2UHRB4RT5E4RT547RT346FDQD5RITB2368DTHGBGIJUY78EYHUODNSUDGH78'
+		"fjgvadshkfgasdjkfjoasdghwevbdaehbndfawegh9fuiwehdfuihedfuuetywt35687epgh'sjt",
+		'VSERUOHFAJKXDOASDUYHUIOWE4JHR79WE6DY34R6T2U-[[´+}}HRB4RT5E4RT547RT346FDQD5RITB2368DTHGBGIJUY78EYHUODNSUDGH78'
 	]
 }))
 
@@ -100,7 +100,7 @@ app.post("/serofcaLogin",(req,res) => {
 		res.render('badLogin')
 		return
 	}
-	let logQuery = "SELECT * FROM usuarios WHERE email="+email+" AND password='"+password+"'"
+	let logQuery = "SELECT * FROM usuarios WHERE email=" + email + " AND password='"+password+"'"
 	con.query(logQuery,function(err,result){
 		if (err) {
 			console.log( err )
@@ -142,7 +142,7 @@ app.use('/physicist',(req,res,next) => {//validating session
 	if( req.session.physicist_id && Number(req.session.physicist_id) === req.session.physicist_id ){
 		next( )
 	}else{
-		res.redirect( "/" )
+		res.redirect( "/enterprise-login" )
 	}
 })
 app.use('/physicist',physicistRouter)
@@ -151,7 +151,7 @@ app.use('/admin',(req,res,next) => {//validating session
 	if( req.session.admin_id && Number(req.session.admin_id) === req.session.admin_id ){
 		next( )
 	}else{
-		res.redirect( "/" )
+		res.redirect( "/enterprise-login" )
 	}
 })
 app.use('/admin',adminRouter)

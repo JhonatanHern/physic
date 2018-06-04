@@ -21,4 +21,9 @@ html
 				let value = e.target.value
 				console.log(value)
 				e.target.innerHTML = e.target.innerHTML
+				open('physicist?id='+value, "", "width=900,height=700")
+				/*
+				 * that last line resets the selector
+				 * so the selected option will always be the disabled one
+				*/
 			})

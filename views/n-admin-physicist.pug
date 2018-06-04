@@ -1,0 +1,32 @@
+doctype html
+html
+	head
+		title #{physicist.email}
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		h1 #{physicist.email}
+		if clinics.length
+			h2 Clinicas:
+			select(id="selector")
+				!="<option disabled selected>Seleccionar Clínica</option>"
+				-for(clinic of clinics)
+					option(value=clinic.rif)!=clinic.nombre
+			script.
+				document.getElementById('selector').addEventListener('change',e=>{
+					e.preventDefault()
+					let value = e.target.value
+					console.log(value)
+					e.target.innerHTML = e.target.innerHTML
+					//open('clinic?rif='+value)
+					/*
+					 * that last line resets the selector
+					 * so the selected option will always be the disabled one
+					*/
+				})
+		else
+			h2 No hay clinicas asociadas a este usuario
+		button Crear nueva clínica
+
