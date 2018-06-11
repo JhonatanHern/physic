@@ -1,25 +1,27 @@
 'use strict'
 
+const httpsAvailable = false
 
-let fs = require('fs'),
+const fs = require('fs'),
 	https = require('https')
 
 /*npm modules*/
-let express       = require("express"),
+const express       = require("express"),
 	body_parser   = require("body-parser"),
 	cookieSession = require("cookie-session")
 
 /*personalized modules*/
-let serofcaRouter = require('./modules/serofcaRouter'),//first-version router
-	validId      = require('./modules/idValidator'),  
-	SHA256      = require('./modules/SHA256'),
-	mysql      = require('./modules/connection'),
+const serofcaRouter = require('./modules/serofcaRouter'),//first-version router
+	adminRouter     = require('./modules/admin-router'),
+	validId         = require('./modules/idValidator'),  
 	physicistRouter = require('./modules/phy-router'),
-	adminRouter = require('./modules/admin-router')
+	mysql           = require('./modules/connection'),
+	SHA256          = require('./modules/SHA256')
 
-let con = mysql.connection
+const con = mysql.connection
 /*configurating app issues*/
-let app = express()
+const app = express()
+
 app.use(express.static('./public'))
 app.use(body_parser.urlencoded({extended:true}))
 app.set('view engine', 'pug')
@@ -29,7 +31,7 @@ app.use(cookieSession({
 	name:"session",
 	keys:[
 		"fjgvadshkfgasdjkfjoasdghwevbdaehbndfawegh9fuiwehdfuihedfuuetywt35687epgh'sjt",
-		'VSERUOHFAJKXDOASDUYHUIOWE4JHR79WE6DY34R6T2U-[[´+}}HRB4RT5E4RT547RT346FDQD5RITB2368DTHGBGIJUY78EYHUODNSUDGH78'
+		'VSE%#/#%[]¨*¨P¨*¨¨¨h%&(%=$&(/&)"!%/!&()/?=)[*'
 	]
 }))
 
