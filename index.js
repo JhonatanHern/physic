@@ -1,14 +1,16 @@
 'use strict'
 
-const httpsAvailable = false
+const httpsAvailable = true
+const cachingTime = 1000
 
 const fs = require('fs'),
 	https = require('https')
 
 /*npm modules*/
-const express       = require("express"),
+const express     = require("express"),
 	body_parser   = require("body-parser"),
-	cookieSession = require("cookie-session")
+	cookieSession = require("cookie-session"),
+	compression   = require('compression')
 
 /*personalized modules*/
 const serofcaRouter = require('./modules/serofcaRouter'),//first-version router
@@ -22,7 +24,8 @@ const con = mysql.connection
 /*configurating app issues*/
 const app = express()
 
-app.use(express.static('./public'))
+app.use(compression())
+app.use(express.static('./public' , { maxAge : cachingTime } ))
 app.use(body_parser.urlencoded({extended:true}))
 app.set('view engine', 'pug')
 //app.locals.pretty = true
@@ -196,7 +199,7 @@ if (httpsAvailable) {
 
 	let httpsServer = https.createServer(credentials,app)
 
-	httpsServer.listen(81,()=>{
+	httpsServer.listen(443,()=>{
 		console.log('https server working')
 	})
 }

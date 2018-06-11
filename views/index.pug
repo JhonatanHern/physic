@@ -1,6 +1,10 @@
 doctype html
 html
 	head
+		script.
+			if (location.protocol !== 'https:' && location.host === 'serofcapp.hopto.org' ){
+				location.href = 'https:' + window.location.href.substring(window.location.protocol.length);
+			}
 		title Serofca
 		meta(charset="utf-8")
 		link(rel="shortcut icon" href="/favicon.ico")
