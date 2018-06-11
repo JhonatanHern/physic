@@ -13,11 +13,22 @@ body{
 	color:white;
 	font-family:Copperplate , Copperplate Gothic Light, sans-serif;
 }
+@-webkit-keyframes fancy-entrance{
+	from{-webkit-transform: rotateY(90deg);transform: rotateY(90deg)}
+	to{-webkit-transform: rotateY(0deg);transform: rotateY(0deg)}
+}
+@keyframes fancy-entrance{
+	from{-webkit-transform: rotateY(90deg);transform: rotateY(90deg)}
+	to{-webkit-transform: rotateY(0deg);transform: rotateY(0deg)}
+}
 @media(min-width:600px){
 	body{font-size: 1.3em;}
 }
 @media(min-height:600px){
 	body{font-size: 1.3em;}
+}
+@media(max-width:600px){
+	body{padding-left: 3vw;padding-right: 3vw;}
 }
 select,input,button,textarea{
 	margin-bottom:1em;
@@ -30,19 +41,33 @@ select,input,button,textarea{
 	border:4px solid orange;
 }
 input[type="submit"],button{
-	background-color:orange;
+	background-color:rgb(247,147,29);
 	color:white;
 	font-weight: bold;
 	font-size: 1em;
 	cursor: pointer;
 }
+.button-group{
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-pack: distribute;
+	justify-content: space-around;
+	-ms-flex-wrap: wrap;
+		flex-wrap: wrap;
+}
+.button-group button{
+	width: auto;
+}
 .table-holder{
 	overflow: auto;
 	color:#333;
+	max-height: 80vh;
 }
 table{
 	width:100%;
 	border-collapse:collapse;
+	font-size: .7em;
 }
 td,th{
 	background-color:white;
@@ -50,4 +75,12 @@ td,th{
 }
 table * {
 	text-align:center;
+}
+.hid{
+	display: none;
+	-webkit-animation: fancy-entrance .3s ease-in-out;
+	        animation: fancy-entrance .3s ease-in-out;
+}
+.show .hid{
+	display: block;
 }

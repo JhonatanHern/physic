@@ -1,15 +1,42 @@
-var express = require('express')
+/*
+ * this code is divided in several blocks
+ * 1 - import libraries and app's adjustements
+ * 2 - pages that work in admin/* (render method is used on them)
+ * 3 - get requests of JSON data (custom queries)
+ * 4 - Create
+ * 5 - Read (No special queries, plain ones straight from a table)
+ * 6 - Update
+ * 7 - Delete
+ * 8 - File Upload
+ * 9 - module.exports
+*/
 
-var mysql = require('./connection'),
+//part 1 :
+let express = require('express'),
+	crypto = require('crypto')
+
+let mysql = require('./connection'),
 	subirInformes = require('./subirInformes')
 
-var router = express.Router()
-var con = mysql.connection;
+let router = express.Router()
+let con = mysql.connection;
 
 router.use((req, res, next)=>{
 	next()
 })
 
+let missingFieldsMessage = `
+<html>
+<body>
+	Debe llenar todos los campos del formulario
+	<script>setTimeout(()=>history.back(),1000)</script>
+</body>
+</html>
+`
+
+/*
+ * part 2 of the code: 
+*/
 router.get('/',(req,res)=>{
 	con.query("SELECT email,id FROM usuarios WHERE userClass = 'P'",(err,data)=>{
 		if(err)
@@ -17,7 +44,6 @@ router.get('/',(req,res)=>{
 		res.render( 'n-admin-start' , { error : err , data : data } )
 	})
 })
-
 router.get('/physicist',(req,res)=>{
 	let idPhysicist = Number(req.query.id)
 	if (isNaN(idPhysicist)) {
@@ -39,7 +65,30 @@ router.get('/physicist',(req,res)=>{
 		})
 	})
 })
-
+router.get('/clinic',(req,res)=>{
+	let rif = mysql.escape(req.query.rif)
+	let sql = `
+		SELECT nombre,id_encargado,observacion,ultcsl,vencsl,ultrim,venrim,ultpsr,venpsr,ultpfe,venpfe,f_ccsl,n_pcsl,f_crim,n_prim,f_cpsr,n_ppsr,f_cpfe,n_ppfe,prox_visita
+		FROM clinicas
+		WHERE rif=${rif}
+		`
+	con.query(sql,(err,clinic)=>{
+		if (err) {
+			console.log(err)
+			res.render('error500')
+			return
+		}
+		res.render('n-admin-clinic',{
+			clinic : clinic[0]
+		})
+	})
+})
+router.get('/newUserForm',(req,res)=>{
+	res.render('n-admin-new-user')
+})
+/*
+ * part 3 of the code (get requests of JSON data):
+*/
 router.get('/pending',(req,res)=>{
 	let idPhysicist = Number(req.query.id)
 	res.setHeader('Content-Type', 'application/json')
@@ -51,7 +100,7 @@ router.get('/pending',(req,res)=>{
 	SELECT
 		CONCAT("EQ-",equipos.nombre) AS nombre,
 		equipos.ProxQc AS fechaEvento,
-		clinicas.nombre
+		clinicas.nombre AS clinica
 	FROM equipos,clinicas
 	WHERE
 		equipos.rif_clinica = clinicas.rif AND
@@ -63,7 +112,7 @@ router.get('/pending',(req,res)=>{
 	SELECT
 		CONCAT("SA-",salas.identificador_en_clinica) AS nombre,
 		salas.ProximoLev AS fechaEvento,
-		clinicas.nombre
+		clinicas.nombre AS clinica
 	FROM salas,clinicas
 	WHERE
 		salas.rif_clinica = clinicas.rif AND
@@ -79,11 +128,45 @@ router.get('/pending',(req,res)=>{
 		res.end(JSON.stringify(data))
 	})
 })
-
-router.get('/clinic',(req,res)=>{
-	let rif = mysql.escape(req.query.rif)
-	/*
-	*/
+/*
+ * part 4 of the code (Create):
+*/
+router.post('/newUser',(req,res)=>{
+	let { mail , password , userClass } = req.body
+	if ( !mail || !password || !userClass ) {
+		res.end(missingFieldsMessage)
+		return
+	}
+	mail = mysql.escape(mail)
+	password = crypto.createHash('sha256').update(password).digest('hex')
+	userClass = mysql.escape(userClass)
+	let sql = `
+		INSERT INTO usuarios(email,password,userClass)
+		VALUES (${mail},'${password}',${userClass})
+		`
+	con.query(sql,(err)=>{
+		if (err) {
+			console.log(err)
+			return
+		}
+		res.render('n-success-message',{
+			message:'Creación de usuario exitosa'
+		})
+	})
 })
-
-module.exports = router
+/*
+ * part 5 of the code (Read):
+*/
+/*
+ * part 6 of the code (Update):
+*/
+/*
+ * part 7 of the code (Delete):
+*/
+/*
+ * part 8 of the code (File Upload):
+*/
+/*
+ * part 9 of the code (module.exports):
+*/
+module.exports = router // this line MUST be the last one

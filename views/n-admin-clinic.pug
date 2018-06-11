@@ -1,0 +1,66 @@
+doctype html
+html
+	head
+		title #{clinic.nombre}
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		h2 #{clinic.nombre}
+		//-section #{JSON.stringify(clinic)}
+		//-rif,nombre,id_encargado,observacion,ultcsl,vencsl,ultrim,venrim,ultpsr,venpsr,ultpfe,venpfe,prox_visita
+		section
+			|#{clinic.observacion}
+		br
+		button.watch Ver permisos:
+		br
+		br
+		section.table-holder.hid
+			table
+				thead
+					tr
+						th Permisología
+						th Fecha Ult.
+						th Fecha Exp.
+						th N° Permiso
+						th Fecha Consig. 
+				tbody
+					tr
+						td Conformidad Sanitaria del Local
+						td #{clinic.ultcsl?clinic.ultcsl.getDate()+' - '+(clinic.ultcsl.getUTCMonth()+1)+' - '+clinic.ultcsl.getFullYear():"No Hay Datos"}
+						td #{clinic.vencsl?clinic.vencsl.getDate()+' - '+(clinic.vencsl.getUTCMonth()+1)+' - '+clinic.vencsl.getFullYear():"No Hay Datos"}
+						td #{clinic.n_pcsl?clinic.n_pcsl:"No Hay Datos"}
+						td #{clinic.f_ccsl?clinic.f_ccsl.getDate()+' - '+(clinic.f_ccsl.getUTCMonth()+1)+' - '+clinic.f_ccsl.getFullYear():"No Hay Datos"}
+					tr
+						td RIMFRI
+						td #{clinic.ultrim?clinic.ultrim.getDate()+' - '+(clinic.ultrim.getUTCMonth()+1)+' - '+clinic.ultrim.getFullYear():"No Hay Datos"}
+						td #{clinic.venrim?clinic.venrim.getDate()+' - '+(clinic.venrim.getUTCMonth()+1)+' - '+clinic.venrim.getFullYear():"No Hay Datos"}
+						td #{clinic.n_prim?clinic.n_prim:"No Hay Datos"}
+						td #{clinic.f_crim?clinic.f_crim.getDate()+' - '+(clinic.f_crim.getUTCMonth()+1)+' - '+clinic.f_crim.getFullYear():"No Hay Datos"}
+					tr
+						td Permiso Sanitario Ambiente Radiológico
+						td #{clinic.ultpsr?clinic.ultpsr.getDate()+' - '+(clinic.ultpsr.getUTCMonth()+1)+' - '+clinic.ultpsr.getFullYear():"No Hay Datos"}
+						td #{clinic.venpsr?clinic.venpsr.getDate()+' - '+(clinic.venpsr.getUTCMonth()+1)+' - '+clinic.venpsr.getFullYear():"No Hay Datos"}
+						td #{clinic.n_ppsr?clinic.n_ppsr:"No Hay Datos"}
+						td #{clinic.f_cpsr?clinic.f_cpsr.getDate()+' - '+(clinic.f_cpsr.getUTCMonth()+1)+' - '+clinic.f_cpsr.getFullYear():"No Hay Datos"}
+					tr
+						td Permiso Sanitario Funcionamiento de los Equipos
+						td #{clinic.ultpfe?clinic.ultpfe.getDate()+' - '+(clinic.ultpfe.getUTCMonth()+1)+' - '+clinic.ultpfe.getFullYear():"No Hay Datos"}
+						td #{clinic.venpfe?clinic.venpfe.getDate()+' - '+(clinic.venpfe.getUTCMonth()+1)+' - '+clinic.venpfe.getFullYear():"No Hay Datos"}
+						td #{clinic.n_ppfe?clinic.n_ppfe:"No Hay Datos"}
+						td #{clinic.f_cpfe?clinic.f_cpfe.getDate()+' - '+(clinic.f_cpfe.getUTCMonth()+1)+' - '+clinic.f_cpfe.getFullYear():"No Hay Datos"}
+		br
+		section.button-group
+			button Ver Equipos
+			button Ver Salas
+			button Ver Actividades
+			button Ver QC Chasis
+			button Ver QC Dispositivos
+			button Ver QC Imagen
+		script.
+			Array.from(document.getElementsByClassName('watch')).forEach(e=>{
+				e.addEventListener('click',()=>{
+					document.body.classList.toggle('show')
+				})
+			})

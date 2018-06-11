@@ -7,26 +7,122 @@ html
 		meta(name="viewport" content="width=device-width, initial-scale=1.0")
 		link(rel="stylesheet" href='/css/v2-template.css')
 	body
-		h1 #{physicist.email}
 		if clinics.length
-			h2 Clinicas:
+			h2 Clinicas de #{physicist.email.split('serofca')[0]}:
 			select(id="selector")
 				!="<option disabled selected>Seleccionar Clínica</option>"
 				-for(clinic of clinics)
 					option(value=clinic.rif)!=clinic.nombre
+			button Crear nueva clínica
+			section#data
+				h3 #{physicist.email.split('serofca')[0]} tiene:
+				div
+					span(style="text-decoration:underline")#past 0 
+					| eventos expirados o desactualizados
+				div
+					span(style="text-decoration:underline")#present 0 
+					| eventos en 1 o 2 meses
+				div
+					span(style="text-decoration:underline")#future 0 
+					| eventos en 3 o 4 meses
+			br
+			button#showTables Mostrar Pendientes 
+			br
+			section.table-holder.hid
+				table
+					thead
+						tr
+							th pasados
+						tr
+							th evento
+							th fecha
+							th Clínica
+					tbody#past-table
+			br
+			section.table-holder.hid
+				table
+					thead
+						tr
+							th 1 o 2 meses
+						tr
+							th evento
+							th fecha
+							th Clínica
+					tbody#present-table
+			br
+			section.table-holder.hid
+				table
+					thead
+						tr
+							th 3 o 4 meses
+						tr
+							th evento
+							th fecha
+							th Clínica
+					tbody#future-table
 			script.
-				document.getElementById('selector').addEventListener('change',e=>{
-					e.preventDefault()
-					let value = e.target.value
-					console.log(value)
-					e.target.innerHTML = e.target.innerHTML
-					//open('clinic?rif='+value)
-					/*
-					 * that last line resets the selector
-					 * so the selected option will always be the disabled one
-					*/
+				document.addEventListener('DOMContentLoaded',()=>{
+					document.getElementById('selector').addEventListener('change',e=>{
+						e.preventDefault()
+						let value = e.target.value
+						console.log(value)
+						e.target.innerHTML = e.target.innerHTML
+						/*
+						 * that last line resets the selector
+						 * so the selected option will always be the disabled one
+						*/
+						open('/admin/clinic?rif='+value)
+					})
+					document.getElementById('showTables').addEventListener('click',()=>{
+						document.body.classList.toggle('show')
+					})
+					let fillTableBody = (tableBody,events)=>{
+						events.forEach(e=>{
+							let tr = document.createElement('tr')
+							let tdcl = document.createElement('td')
+							let tdEvent = document.createElement('td')
+							let tdDate = document.createElement('td')
+							tdcl.innerText = e.clinica
+							if( e.nombre.substr(0,3) === 'EQ-' ){//equipo
+								tdEvent.innerText = 'QC de ' + e.nombre.substr(3)
+							}else{//sala
+								tdEvent.innerText = 'Lev Sala ' + e.nombre.substr(3)
+							}
+							tdDate.innerText = e.fechaEvento.split('T')[0]
+							tr.appendChild( tdEvent )
+							tr.appendChild( tdDate )
+							tr.appendChild( tdcl )
+							tableBody.appendChild( tr )
+						})
+					}
+					fetch('/admin/pending?id='+#{physicist.id},{credentials:'include'})
+						.then(r=>r.json())
+						.then(json=>{
+							let currentDateValue = (new Date()).valueOf(),
+								aMonthInMiliseconds = 1000 * 3600 * 24 * 30
+
+							let past = json.filter(e=>{
+								let eventDate = new Date(e.fechaEvento)
+								return currentDateValue > eventDate.valueOf()
+							})
+							let present = json.filter(e=>{
+								let eventDateValue = new Date(e.fechaEvento).valueOf()
+								return currentDateValue <= eventDateValue && eventDateValue <= (currentDateValue + aMonthInMiliseconds * 2)
+							})
+							let future = json.filter(e=>{
+								let eventDate = new Date(e.fechaEvento)
+								return (currentDateValue + aMonthInMiliseconds * 2) < eventDate.valueOf() && eventDate.valueOf() < (currentDateValue + aMonthInMiliseconds * 4)
+							})
+							document.getElementById('past').innerText = past.length + ' '
+							fillTableBody( document.getElementById( 'past-table' ) , past )
+							document.getElementById('present').innerText = present.length + ' '
+							fillTableBody( document.getElementById( 'present-table' ) , present )
+							document.getElementById('future').innerText = future.length + ' '
+							fillTableBody( document.getElementById( 'future-table' ) , future )
+						})
 				})
 		else
+			h2 #{physicist.email.split('serofca')[0]}
 			h2 No hay clinicas asociadas a este usuario
-		button Crear nueva clínica
+			button Crear nueva clínica
 

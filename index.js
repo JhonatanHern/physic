@@ -1,4 +1,8 @@
- 'use strict'
+'use strict'
+
+
+let fs = require('fs'),
+	https = require('https')
 
 /*npm modules*/
 let express       = require("express"),
@@ -19,6 +23,7 @@ let app = express()
 app.use(express.static('./public'))
 app.use(body_parser.urlencoded({extended:true}))
 app.set('view engine', 'pug')
+//app.locals.pretty = true
 
 app.use(cookieSession({
 	name:"session",
@@ -177,3 +182,19 @@ app.use((error, req, res, next) => {//handle 500 errors
 app.listen(80,() => {
 	console.log('server listening in port 80')
 })
+
+//https ahead
+if (httpsAvailable) {
+	let key = fs.readFileSync('certs/key.key','utf8'),
+		crt = fs.readFileSync('certs/crt.crt','utf8'),
+		credentials = {
+			key:key,
+			cert:crt
+		}
+
+	let httpsServer = https.createServer(credentials,app)
+
+	httpsServer.listen(81,()=>{
+		console.log('https server working')
+	})
+}

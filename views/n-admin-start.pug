@@ -15,15 +15,29 @@ html
 				!="<option disabled selected>Seleccionar Físico</option>"
 				-for(phy of data)
 					option(value=phy.id)!=phy.email
-		script.
-			document.getElementById('selector').addEventListener('change',e=>{
-				e.preventDefault()
-				let value = e.target.value
-				console.log(value)
-				e.target.innerHTML = e.target.innerHTML
-				open('physicist?id='+value, "", "width=900,height=700")
-				/*
-				 * that last line resets the selector
-				 * so the selected option will always be the disabled one
-				*/
-			})
+			button#create Crear nuevo usuario
+			script.
+				document.getElementById('selector').addEventListener('change',e=>{
+					e.preventDefault()
+					let value = e.target.value
+					console.log(value)
+					e.target.innerHTML = e.target.innerHTML
+					/*
+					 * that last line resets the selector
+					 * so the selected option will always be the disabled one
+					*/
+					w = open('/admin/physicist?id='+value, ""/*, "width=900,height=700"*/)
+				})
+				document.getElementById('create').addEventListener('click',e=>{
+					e.preventDefault()
+					let w = open('/admin/newUserForm',"","width=400,height=500")
+					
+					let timer = setInterval( () => {
+						//this timer waits for the popup to close
+						//and reloads the current page
+						if(w.closed) {  
+							clearInterval(timer)  
+							location.reload() 
+						}
+					},1000)
+				})

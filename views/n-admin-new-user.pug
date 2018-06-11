@@ -1,0 +1,18 @@
+doctype html
+html
+	head
+		title Nuevo Usuario
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		h2 Crear Usuario
+		form(method="POST" action="/admin/newUser")
+			input(placeholder="Correo Electrónico" name="mail" required type="email")
+			input(placeholder="Contraseña" min-length="10" name="password" required)
+			select(name="userClass")
+				!="<option disabled selected>Tipo de Usuario</option>"
+				option( value = "P" ) Físico
+				option( value = "A" ) Administrador
+			input(type='submit')
