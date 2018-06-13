@@ -52,15 +52,83 @@ html
 						td #{clinic.f_cpfe?clinic.f_cpfe.getDate()+' - '+(clinic.f_cpfe.getUTCMonth()+1)+' - '+clinic.f_cpfe.getFullYear():"No Hay Datos"}
 		br
 		section.button-group
-			button Ver Equipos
-			button Ver Salas
-			button Ver Actividades
-			button Ver QC Chasis
-			button Ver QC Dispositivos
-			button Ver QC Imagen
+			button(onclick="open('/admin/equipement')") Ver Equipos
+			button(onclick="open('/admin/')") Ver Salas
+			button(onclick="open('/admin/')") Ver Actividades
+			button(onclick="open('/admin/')") Ver QC Chasis
+			button(onclick="open('/admin/')") Ver QC Dispositivos
+			button(onclick="open('/admin/')") Ver QC Imagen
+		section
+			h5 Ver reportes de
+			select#selector
+			div#reports.button-group
 		script.
 			Array.from(document.getElementsByClassName('watch')).forEach(e=>{
 				e.addEventListener('click',()=>{
 					document.body.classList.toggle('show')
 				})
+			})
+			const months = [
+				'Enero',
+				'Febrero',
+				'Marzo',
+				'Abril',
+				'Mayo',
+				'Junio',
+				'Julio',
+				'Agosto',
+				'Septiembre',
+				'Octubre',
+				'Noviembre',
+				'Diciembre'
+			]
+			const parseReportName = name => {
+				let splittedName = name.split('.')[0].split('-')
+				console.log(splittedName)
+				let o = {
+					rif : splittedName.filter((sub,i) => i < (splittedName.length - 2)).join('-'),
+					year : splittedName[splittedName.length-2],
+					month : months[ Number( splittedName[ splittedName.length-1 ] ) - 1 ],
+					monthNumber : splittedName[ splittedName.length-1 ]
+				}
+				console.log(o)
+				return o
+			}
+			const fetchReports = (year)=>{
+				let query = '/admin/reportsFromYear?rif='+
+						decodeURIComponent(
+							location.search.substr(1).split('&')[0].split('=')[1]
+							)+
+						'&year='+year
+				fetch(query,{credentials:'include'})
+					.then(res=>res.json())
+					.then(json=>{
+						let reportsHTMLElement = document.getElementById('reports')
+						reportsHTMLElement.innerHTML = ''
+						if(!json.length){
+							reportsHTMLElement.innerHTML = 'No hay reportes en este año'
+							return
+						}
+						json.forEach(r=>{
+							let parsed = parseReportName( r )
+							let a = document.createElement('a')
+							a.target = '_blank'
+							a.className = 'button-like'
+							a.href = `/admin/getReport?rif=${encodeURIComponent(parsed.rif)}&year=${parsed.year}&month=${parsed.monthNumber}`
+							a.innerText = parsed.month
+							reportsHTMLElement.appendChild(a)
+						})
+					})
+					.catch(error => console.log(error))
+			}
+			fetchReports((new Date()).getFullYear())
+			const selector = document.getElementById('selector')
+			for(let year = (new Date()).getFullYear() ; year > 2016 ; year-- ){
+				let option = document.createElement('option')
+				option.value = year + ''
+				option.innerText = year + ''
+				selector.appendChild(option)
+			}
+			selector.addEventListener('change',e=>{
+				fetchReports(e.target.value)
 			})

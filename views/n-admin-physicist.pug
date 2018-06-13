@@ -13,7 +13,7 @@ html
 				!="<option disabled selected>Seleccionar Clínica</option>"
 				-for(clinic of clinics)
 					option(value=clinic.rif)!=clinic.nombre
-			button Crear nueva clínica
+			button#newClinic Crear nueva clínica
 			section#data
 				h3 #{physicist.email.split('serofca')[0]} tiene:
 				div
@@ -95,7 +95,7 @@ html
 							tableBody.appendChild( tr )
 						})
 					}
-					fetch('/admin/pending?id='+#{physicist.id},{credentials:'include'})
+					fetch('/admin/pending?id=#{physicist.id}',{credentials:'include'})
 						.then(r=>r.json())
 						.then(json=>{
 							let currentDateValue = (new Date()).valueOf(),
@@ -120,6 +120,19 @@ html
 							document.getElementById('future').innerText = future.length + ' '
 							fillTableBody( document.getElementById( 'future-table' ) , future )
 						})
+					document.getElementById('newClinic').addEventListener('click',e=>{
+						e.preventDefault()
+						let w = open('/admin/newClinicForm?physicist=#{physicist.id}',"","width=400,height=500")
+
+						let timer = setInterval( () => {
+							//this timer waits for the popup to close
+							//and reloads the current page
+							if(w.closed) {  
+								clearInterval(timer)  
+								location.reload() 
+							}
+						},1000)
+					})
 				})
 		else
 			h2 #{physicist.email.split('serofca')[0]}

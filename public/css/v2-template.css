@@ -30,6 +30,17 @@ body{
 @media(max-width:600px){
 	body{padding-left: 3vw;padding-right: 3vw;}
 }
+a{
+	color: inherit;
+	text-decoration: underline;
+}
+a.button-like{
+	background-color: rgb(247,147,29);
+	border: 3px solid white;
+	padding: .3em;
+	border-radius: 5px;
+	font-weight: bold;
+}
 select,input,button,textarea{
 	margin-bottom:1em;
 	width:100%;

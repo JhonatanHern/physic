@@ -20,7 +20,7 @@ function inf(req,res) {
 	}
 	conn.executeByUser(id,
 		function(){
-			let sql = "SELECT * FROM clinicas WHERE id_encargado="+id+" AND rif="+escape(rif)
+			let sql = "SELECT * FROM clinicas WHERE id_encargado=" + id + " AND rif="+escape(rif)
 			conn.query(sql,function(err,cls) {
 				if( err || cls.length === 0 ){
 					res.render('error500')

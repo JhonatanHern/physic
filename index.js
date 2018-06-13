@@ -24,11 +24,14 @@ const con = mysql.connection
 /*configurating app issues*/
 const app = express()
 
+app.disable('x-powered-by')
+//remove this header so the client does not know
+//what tech is being used in the backend 
 app.use(compression())
+//compress data saving bandwidth
 app.use(express.static('./public' , { maxAge : cachingTime } ))
 app.use(body_parser.urlencoded({extended:true}))
 app.set('view engine', 'pug')
-//app.locals.pretty = true
 
 app.use(cookieSession({
 	name:"session",
@@ -185,7 +188,7 @@ app.use((error, req, res, next) => {//handle 500 errors
 })
 
 app.listen(80,() => {
-	console.log('server listening in port 80')
+	console.log('http server working in port 80')
 })
 
 //https ahead
@@ -200,6 +203,6 @@ if (httpsAvailable) {
 	let httpsServer = https.createServer(credentials,app)
 
 	httpsServer.listen(443,()=>{
-		console.log('https server working')
+		console.log('https server working in port 443')
 	})
 }

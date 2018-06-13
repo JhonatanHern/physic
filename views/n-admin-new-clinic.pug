@@ -1,0 +1,24 @@
+doctype html
+html
+	head
+		title Nuevo Usuario
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		h2 Crear Clínica
+		form(method="POST" action=( "/admin/newClinic?idUser=" + idUser ))
+			input(placeholder="Nombre de la Clínica" name="nombre" required)
+			input(placeholder="RIF" max-length="12" name="rif" required)
+			input(type='submit')
+		script.
+			document.querySelector('input[name="nombre"]').addEventListener('keyup',e=>{
+				e.target.value = e.target.value.toUpperCase()
+			})
+			document.querySelector('input[name="rif"]').addEventListener('keyup',e=>{
+				if(e.target.value.length > 12){
+					e.target.value = e.target.value.substr(0,12)
+				}
+				e.target.value = e.target.value.toUpperCase()
+			})

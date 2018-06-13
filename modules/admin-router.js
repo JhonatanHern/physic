@@ -7,7 +7,7 @@
  * 5 - Read (No special queries, plain ones straight from a table)
  * 6 - Update
  * 7 - Delete
- * 8 - File Upload
+ * 8 - File Upload and Download
  * 9 - module.exports
 */
 
@@ -16,7 +16,7 @@ let express = require('express'),
 	crypto = require('crypto')
 
 let mysql = require('./connection'),
-	subirInformes = require('./subirInformes')
+	fileManager = require('./fileManager')
 
 let router = express.Router()
 let con = mysql.connection;
@@ -35,7 +35,7 @@ let missingFieldsMessage = `
 `
 
 /*
- * part 2 of the code: 
+ * part 2 of the code (admin/*): 
 */
 router.get('/',(req,res)=>{
 	con.query("SELECT email,id FROM usuarios WHERE userClass = 'P'",(err,data)=>{
@@ -86,10 +86,33 @@ router.get('/clinic',(req,res)=>{
 router.get('/newUserForm',(req,res)=>{
 	res.render('n-admin-new-user')
 })
+router.get('/newClinicForm',(req,res)=>{
+	res.render('n-admin-new-clinic',{
+		idUser:req.query.physicist
+	})
+})
+router.get('/equipement',(req,res)=>{
+	let rif = req.query.rif
+	const sql = `
+	SELECT * FROM equipos
+	WHERE rif_clinica=${mysql.escape(rif)}
+	`
+	con.query(sql,(err,equipements)=>{
+		if (err) {
+			console.log(err)
+			res.render('error500')
+			return
+		}
+		res.render('n-admin-equipement' , {
+			equipements : equipements,
+			rif : req.query.rif
+		})
+	})
+})
 /*
  * part 3 of the code (get requests of JSON data):
 */
-router.get('/pending',(req,res)=>{
+router.get('/pending', (req,res) => {
 	let idPhysicist = Number(req.query.id)
 	res.setHeader('Content-Type', 'application/json')
 	if (isNaN(idPhysicist)) {
@@ -128,6 +151,18 @@ router.get('/pending',(req,res)=>{
 		res.end(JSON.stringify(data))
 	})
 })
+router.get('/reportsFromYear', (req,res) => {
+	let { rif , year } = req.query
+	if ( !rif || !year || rif.length > 14 || !/^[\d|A-Z|-\s]*$/.test(rif) || !/\d\d\d\d/.test(year) ) {
+		res.status(400)
+		res.end('bad request detected')
+		return
+	}
+	fileManager.getReportsFromYear(rif,year,(files)=>{
+		console.log(files)
+		res.end(JSON.stringify(files))
+	})
+})
 /*
  * part 4 of the code (Create):
 */
@@ -140,7 +175,7 @@ router.post('/newUser',(req,res)=>{
 	mail = mysql.escape(mail)
 	password = crypto.createHash('sha256').update(password).digest('hex')
 	userClass = mysql.escape(userClass)
-	let sql = `
+	const sql = `
 		INSERT INTO usuarios(email,password,userClass)
 		VALUES (${mail},'${password}',${userClass})
 		`
@@ -154,6 +189,29 @@ router.post('/newUser',(req,res)=>{
 		})
 	})
 })
+router.post('/newClinic',(req,res)=>{
+	let { nombre , rif } = req.body
+	const physicistId = Number(req.query.idUser)
+	if ( !nombre || !rif || isNaN(physicistId) ) {
+		res.end(missingFieldsMessage)
+		return
+	}
+	nombre = mysql.escape(nombre)
+	rif = mysql.escape(rif)
+	const sql = `
+		INSERT INTO clinicas(rif,nombre,id_encargado)
+		VALUES (${rif},${nombre},${physicistId})
+	`
+	con.query(sql,(err)=>{
+		if (err) {
+			console.log(err)
+			return
+		}
+		res.render('n-success-message',{
+			message:'Creación de clínica exitosa'
+		})
+	})
+})
 /*
  * part 5 of the code (Read):
 */
@@ -164,8 +222,9 @@ router.post('/newUser',(req,res)=>{
  * part 7 of the code (Delete):
 */
 /*
- * part 8 of the code (File Upload):
+ * part 8 of the code (File Upload and download):
 */
+
 /*
  * part 9 of the code (module.exports):
 */
