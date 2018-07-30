@@ -1,0 +1,43 @@
+doctype html
+html
+	head
+		title Modificar Actividad
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		section#ask
+			button#modify-button Modificar Actividad
+			form(action="/admin/deleteActivity" method="POST")
+				input(type='hidden' name='rif_clinica')
+				input(type='hidden' name='fecha')
+				input(type='hidden' name='concepto')
+				input(type="submit" value='Eliminar Actividad')
+		section#modify(style="display:none")
+			h2 Modificar Actividad
+			form(method="POST" action="/admin/updateActivity" id='modify-form')
+				input(placeholder="aaaa-mm-dd" name="fecha_nuevo" required max-length="10")
+				input(placeholder="concepto" name="concepto_nuevo" required max-length="100")
+				input(type="hidden" name="fecha_anterior")
+				input(type="hidden" name="concepto_anterior")
+				input(type="hidden" name="rif_clinica_anterior")
+				input(type='submit')
+		script.
+			let data = location.href.split('?')[1].split('=')[1]
+			data = decodeURIComponent(data)//decodify
+			data = JSON.parse(data)//parse into object
+
+			document.querySelector('[name="rif_clinica"]').value = data.rif_clinica
+			document.querySelector('[name="fecha"]').value = data.fecha.split('T')[0]
+			document.querySelector('[name="concepto"]').value = data.concepto
+			document.querySelector('[name="fecha_nuevo"]').value = data.fecha.split('T')[0]
+			document.querySelector('[name="concepto_nuevo"]').value = data.concepto
+			document.querySelector('[name="fecha_anterior"]').value = data.fecha.split('T')[0]
+			document.querySelector('[name="concepto_anterior"]').value = data.concepto
+			document.querySelector('[name="rif_clinica_anterior"]').value = data.rif_clinica
+
+			document.getElementById('modify-button').addEventListener('click',()=>{
+				document.getElementById('ask').style.display = 'none'
+				document.getElementById('modify').style.display = 'block'
+			})

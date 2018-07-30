@@ -51,17 +51,45 @@ html
 						td #{clinic.n_ppfe?clinic.n_ppfe:"No Hay Datos"}
 						td #{clinic.f_cpfe?clinic.f_cpfe.getDate()+' - '+(clinic.f_cpfe.getUTCMonth()+1)+' - '+clinic.f_cpfe.getFullYear():"No Hay Datos"}
 		br
-		section.button-group
-			button(onclick="open('/admin/equipement')") Ver Equipos
-			button(onclick="open('/admin/')") Ver Salas
-			button(onclick="open('/admin/')") Ver Actividades
-			button(onclick="open('/admin/')") Ver QC Chasis
-			button(onclick="open('/admin/')") Ver QC Dispositivos
-			button(onclick="open('/admin/')") Ver QC Imagen
+		section#popups.button-group
+			button(reference="/admin/equipement") Ver Equipos
+			button(reference="/admin/rooms") Ver Salas
+			button(reference="/admin/activities") Ver Actividades
+			button(reference="/admin/chasis") Ver QC Chasis
+			button(reference="/admin/disp") Ver QC Dispositivos
+			button(reference="/admin/imagen") Ver QC Imagen
 		section
 			h5 Ver reportes de
 			select#selector
 			div#reports.button-group
+		br
+		button#uploadRep Subir Reporte
+		form#kek(action='kek')
+			h2 Subir Reporte
+			section
+				input(value='2018', type='number', name='year', placeholder='Año')
+				select(name='month')
+					option(value='1') Enero
+					option(value='2') Febrero
+					option(value='3') Marzo
+					option(value='4') Abril
+					option(value='5') Mayo
+					option(value='6') Junio
+					option(value='7') Julio
+					option(value='8') Agosto
+					option(value='9') Septiembre
+					option(value='10') Octubre
+					option(value='11') Noviembre
+					option(value='12') Diciembre
+			.dropper
+				label(for='f')
+					strong Click para escojer un archivo 
+					| o arrastra el archivo aquí
+			input#f(style='display: none', type='file', name='filetoupload')
+			input(type="hidden" name="rif")
+			br
+			input(type='submit', value='Enviar')
+
 		script.
 			Array.from(document.getElementsByClassName('watch')).forEach(e=>{
 				e.addEventListener('click',()=>{
@@ -95,11 +123,10 @@ html
 				return o
 			}
 			const fetchReports = (year)=>{
-				let query = '/admin/reportsFromYear?rif='+
-						decodeURIComponent(
-							location.search.substr(1).split('&')[0].split('=')[1]
-							)+
-						'&year='+year
+				let query = '/admin/reportsFromYear?rif=' +
+						location.search.substr(1).split('&')[0].split('=')[1] +
+						'&year=' +
+						year
 				fetch(query,{credentials:'include'})
 					.then(res=>res.json())
 					.then(json=>{
@@ -119,7 +146,7 @@ html
 							reportsHTMLElement.appendChild(a)
 						})
 					})
-					.catch(error => console.log(error))
+					.catch( error => console.log( error ) )
 			}
 			fetchReports((new Date()).getFullYear())
 			const selector = document.getElementById('selector')
@@ -131,4 +158,92 @@ html
 			}
 			selector.addEventListener('change',e=>{
 				fetchReports(e.target.value)
+			})
+			Array.from(document.querySelectorAll('#popups > button')).forEach(b=>{
+				b.addEventListener('click',e=>{
+					const route = e.target.getAttribute('reference')+
+						'?rif=' + 
+						location.search.substr(1).split('&')[0].split('=')[1]
+					open(route,'',"width=400,height=500")
+				})
+			})
+			document.getElementById('uploadRep').addEventListener('click',e=>{
+				document.getElementById('kek').classList.toggle('display')
+				document.getElementById('kek').classList.add('done')
+			})
+		script.
+			const canUpload = function(){
+				let div = document.createElement( 'div' )
+				return ( ( 'draggable' in div ) || ( 'ondragstart' in div && 'ondrop' in div ) ) && 'FormData' in window && 'FileReader' in window
+			}()
+			function serializeForm(form){
+				if(typeof form === 'string'){
+					form = document.getElementById(form)
+				}
+				return Array.from(form.querySelectorAll('input,select')).filter(e=>{
+					return e.type !== 'file' && e.type !== 'submit'
+				}).map(e=>{
+					return encodeURIComponent(e.name)+'='+encodeURIComponent(e.value)
+				}).join('&')
+			}
+			document.addEventListener('DOMContentLoaded',e=>{
+				if ( ! canUpload ) {
+					alert( 'necesitas un navegador actualizado para subir archivos' )
+					return
+				}
+				let form = document.getElementsByTagName( 'form' )[ 0 ],
+					droppedFiles = false,
+					triggerFormSubmit = function() {
+						var event = document.createEvent( 'HTMLEvents' )
+						event.initEvent( 'submit' , true , false )
+						form.dispatchEvent( event )
+					}
+				;[ 'drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop' ].forEach( function( event ){
+					form.addEventListener( event, function( e ){
+						// preventing the unwanted behaviours
+						e.preventDefault()
+						e.stopPropagation()
+					})
+				})
+				;[ 'dragover', 'dragenter' ].forEach( function( event ){
+					form.addEventListener( event, function(){
+						form.classList.add( 'is-dragover' )
+					})
+				})
+				;[ 'dragleave', 'dragend', 'drop' ].forEach( function( event ){
+					form.addEventListener( event, function(){
+						form.classList.remove( 'is-dragover' )
+					})
+				})
+				document.querySelector('#kek .dropper').addEventListener( 'drop', function( e ){
+					droppedFiles = e.dataTransfer.files // the files that were dropped
+					document.querySelector('label[for="f"]').innerText = droppedFiles[0].name
+				})
+				form.addEventListener('submit',function(e) {
+					e.preventDefault()
+					let data = new FormData(form)
+					if (droppedFiles) {
+						data.append('filetoupload',droppedFiles[0])
+					}
+					let config  = {
+						method:'POST',
+						body:data,
+						credentials:'include'
+					}
+					fetch('/admin/uploadReport?'+serializeForm('kek'),config)
+						.then(res=>res.json())
+						.then(json=>{
+							form.reset()
+							document.querySelector('label[for="f"]').innerText = 'Archivo subido'
+							document.querySelector('input[name="rif"]').value = decodeURIComponent(location.search.split('=')[1])
+							fetchReports((new Date()).getFullYear())
+						})
+						.catch(err=>{
+							alert('error inesperado, comprueba tu conexión a internet')
+						})
+				})
+				document.querySelector('input#f').addEventListener('change',function(e) {
+					document.querySelector('label[for="f"]').innerText = e.target.value.split('\\')[e.target.value.split('\\').length-1]
+				})
+				document.querySelector('input[name="rif"]').value = decodeURIComponent(location.search.split('=')[1])
 			})

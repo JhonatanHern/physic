@@ -1,0 +1,73 @@
+doctype html
+html
+	head
+		title Actividades
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		script const rif = '#{rif}'
+		if activities.length
+			h2 Actividades
+			section.table-holder
+				table
+					thead
+						tr
+							th Fecha
+							th Nombre
+					tbody#t-body.clickable
+			script!= `const acts = ${JSON.stringify(activities)}`
+			script.
+				const tbody = document.getElementById('t-body')
+				acts.forEach( e =>{
+					e.rif_clinica = rif
+					const tr = document.createElement('tr')
+					let keys = [//the keys must be ordered
+						'fecha',
+						'concepto'
+					]
+					keys.forEach(key=>{
+						let td = document.createElement('td')
+						if( key === 'fecha' ){//date formatting
+							td.innerText = e[key].split('T')[0]
+						}else{
+							td.innerText = e[key]
+						}
+						tr.appendChild(td)
+					})
+					//the tr's are interactive, the next function handles this situation.
+					tr.addEventListener('click',()=>{
+						let w = open(
+							'/admin/modifyOrDeleteActivity?data=' +
+								encodeURIComponent(JSON.stringify(e)),
+							'',
+							"width=400,height=500"
+							)
+						let timer = setInterval( () => {
+							//this timer waits for the popup to close
+							//and reloads the current page
+							if(w.closed) {  
+								clearInterval(timer)  
+								location.reload() 
+							}
+						},1000)
+					})
+					tbody.appendChild(tr)
+				})
+		else
+			h2 no hay actividades en esta clínica
+		br
+		button#create Nueva Actividad
+		script.
+			document.getElementById('create').addEventListener('click',e=>{
+				let w = open('/admin/newActivityForm?rif='+encodeURIComponent(rif),"","width=400,height=500")
+				let timer = setInterval( () => {
+					//this timer waits for the popup to close
+					//and reloads the current page
+					if(w.closed) {  
+						clearInterval(timer)  
+						location.reload() 
+					}
+				},1000)
+			})

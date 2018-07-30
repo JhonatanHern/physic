@@ -1,0 +1,15 @@
+doctype html
+html
+	head
+		title Nueva Actividad
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		h2 Crear Actividad
+		form(method="POST" action='/admin/newActivity')
+			input(placeholder="Nombre del evento" name="concepto" required)
+			input(placeholder="Fecha del evento" name="fecha" required)
+			input(name="rif" type="hidden" value=rif)
+			input(type='submit')

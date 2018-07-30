@@ -1,7 +1,7 @@
 doctype html
 html
 	head
-		title Nuevo Usuario
+		title Nueva Clínica
 		meta(charset="utf-8")
 		link(rel="shortcut icon" href="/favicon.ico")
 		meta(name="viewport" content="width=device-width, initial-scale=1.0")
@@ -10,7 +10,7 @@ html
 		h2 Crear Clínica
 		form(method="POST" action=( "/admin/newClinic?idUser=" + idUser ))
 			input(placeholder="Nombre de la Clínica" name="nombre" required)
-			input(placeholder="RIF" max-length="12" name="rif" required)
+			input(placeholder="RIF" maxlength="12" name="rif" required)
 			input(type='submit')
 		script.
 			document.querySelector('input[name="nombre"]').addEventListener('keyup',e=>{

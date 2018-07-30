@@ -921,12 +921,12 @@ router.post( '/newImagen'    ,function (req,res) {//create for both
 		return;
 	}
 	let body = req.body;
-	let validate = `SELECT * FROM qcimagen WHERE rif_clinica = ${mysql.escape(body.rif)} AND n = ${body.n}`
+	let validate = `SELECT * FROM qcimagen WHERE rif_clinica = ${mysql.escape(body.rif)} AND n = ${mysql.escape(body.n)}`
 	let sql = 'INSERT INTO qcimagen (rif_clinica,tipo,ubi,n,eval1,obs1,date1,eval2,obs2,date2) VALUES ('+
 		mysql.escape(body.rif_clinica)+','+
 		mysql.escape(body.tipo)+','+
 		mysql.escape(body.ubi)+','+
-		(body.n-0)+','+
+		mysql.escape(body.n)+','+
 		mysql.escape(body.eval1)+','+
 		mysql.escape(body.obs1)+','+
 		(body.date1?mysql.escape(body.date1+'-1'):"NULL")+','+

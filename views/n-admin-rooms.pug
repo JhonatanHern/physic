@@ -1,64 +1,58 @@
 doctype html
 html
 	head
-		title Equipos
+		title Salas
 		meta(charset="utf-8")
 		link(rel="shortcut icon" href="/favicon.ico")
 		meta(name="viewport" content="width=device-width, initial-scale=1.0")
 		link(rel="stylesheet" href='/css/v2-template.css')
 	body
 		script const rif = '#{rif}'
-		if equipements.length
-			h2 Equipos
+		if rooms.length
+			h2 Salas
 			section.table-holder
 				table
 					thead
 						tr
 							th Nombre
-							th Sala
-							th Marca
-							th Modelo
-							th Serial
-							th Ult. QC
-							th Prox. QC
+							th Equipos
+							th Próximo Lev.
+							th Último Lev.
 							th Obs
 					tbody#t-body.clickable
-			script!= `const eqs = ${JSON.stringify(equipements)}`
+			script!= `const rooms = ${ JSON.stringify( rooms ) }`
 			script.
-				const tbody = document.getElementById('t-body')
-				eqs.forEach(e=>{
-					const tr = document.createElement('tr')
+				const tbody = document.getElementById( 't-body' )
+				rooms.forEach( e => {
+					const tr = document.createElement( 'tr' )
 					let keys = [//the keys must be ordered
-						'nombre',
-						'sala',
-						'marca',
-						'modelo',
-						'serie',
-						'UltimoQc',
-						'ProxQc',
+						'identificador_en_clinica',
+						'equipos',
+						'ProximoLev',
+						'UltimoLev',
 						'observaciones'
 					]
 					keys.forEach(key=>{
 						let td = document.createElement('td')
 						switch(key){
-							case 'UltimoQc'://date formatting
-							case 'ProxQc':
-								if (e[key]) {
-									td.innerText = e[key].split('T')[0].split('-').filter((e,i)=>i<2).join('-')
+							case 'ProximoLev'://date formatting
+							case 'UltimoLev':
+								if ( e[ key ] ) {
+									td.innerText = e[ key ].split('T')[ 0 ].split('-').filter( ( e , i ) => i < 2 ).join('-')
 								}else{
 									td.innerText = 'N/D'
 								}
 								break
 							default:
-								td.innerText = e[key]
+								td.innerText = e[ key ]
 						}
-						tr.appendChild(td)
+						tr.appendChild( td )
 					})
 					//the tr's are interactive, the next function handles this situation.
-					tr.addEventListener('click',()=>{
+					tr.addEventListener( 'click' , () => {
 						let w = open(
-							'/admin/modifyOrDeleteEquipement?serie=' +
-								encodeURIComponent(e.serie),
+							'/admin/modifyOrDeleteRoom?id=' +
+								encodeURIComponent( e.id ),
 							'',
 							"width=400,height=500"
 							)
@@ -67,9 +61,10 @@ html
 							the next function alters the DOM of the
 							already open window to insert data into the form.
 						*/
-						w.document.body.onload = ()=>{
-							const form = w.document.getElementById('modify-equipement')//form inside popup
-							for(key in e){
+						w.document.body.onload = () => {
+							const form = w.document.getElementById('modify-room')
+							//form inside popup
+							for( key in e ){
 								/*
 									since the inputs share names with the object
 									we can iterate trough properties this way
@@ -78,10 +73,10 @@ html
 								let input = form.querySelector(`[name="${key}"]`)
 								//verify that the input is correct
 								//the input can be an input element or a textarea
-								if(input){
-									switch(key){
-										case 'UltimoQc'://date formatting
-										case 'ProxQc':
+								if( input ){
+									switch( key ){
+										case 'ProximoLev'://date formatting
+										case 'UltimoLev':
 											input.value = e[key].split('-01T')[0]
 											break
 										default:
@@ -93,27 +88,27 @@ html
 						let timer = setInterval( () => {
 							//this timer waits for the popup to close
 							//and reloads the current page
-							if(w.closed) {  
-								clearInterval(timer)  
-								location.reload() 
+							if( w.closed ) {  
+								clearInterval( timer )  
+								location.reload( )
 							}
-						},1000)
-					})
-					tbody.appendChild(tr)
-				})
+						} , 1000 )
+					} )
+					tbody.appendChild( tr )
+				} )
 		else
 			h2 no hay equipos en esta clínica
 		br
-		button#create Nuevo Equipo
+		button#create Nueva Sala
 		script.
-			document.getElementById('create').addEventListener('click',e=>{
-				let w = open('/admin/newEquipementForm?rif='+encodeURIComponent(rif),"","width=400,height=500")
-				let timer = setInterval( () => {
+			document.getElementById( 'create' ).addEventListener( 'click' , e => {
+				let w = open( '/admin/newRoomForm?rif=' + encodeURIComponent( rif ) , "" , "width=400,height=500" )
+				let timer = setInterval( ( ) => {
 					//this timer waits for the popup to close
 					//and reloads the current page
-					if(w.closed) {  
-						clearInterval(timer)  
-						location.reload() 
+					if( w.closed ) {  
+						clearInterval( timer )  
+						location.reload( )
 					}
-				},1000)
-			})
+				} , 1000 )
+			} )

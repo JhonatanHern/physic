@@ -1,0 +1,35 @@
+doctype html
+html
+	head
+		title Alterar Sala
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		section#ask
+			button#modify-button Modificar Sala
+			form(action="/admin/deleteRoom" method="POST")
+				input(type='hidden' name='id' id="delete-id")
+				input(type="submit" value='Eliminar Sala')
+		section#modify(style="display:none")
+			h2 Modificar Sala
+			form(method="POST" action="/admin/updateRoom" id='modify-room')
+				input(placeholder="Nombre" name="identificador_en_clinica" required max-length="10")
+				input(placeholder="Equipos" name="equipos" required max-length="200")
+				input(placeholder="Próximo Levantamiento (aaaa-mm)" name="ProximoLev" required maxlength="7")
+				input(placeholder="Último Levantamiento (aaaa-mm)" name="UltimoLev" required maxlength="7")
+				textarea(placeholder="Observaciones" name="observaciones" maxlength="200")
+				input(type="hidden" name="id")
+				input(type='submit')
+		script.
+			const id = decodeURIComponent(
+				location.href.split('?')[1].split('=')[1]
+				)
+			document.getElementById( 'delete-id' ).value = id
+
+			document.getElementById( 'modify-button' ).addEventListener('click',()=>{
+				document.getElementById('ask').style.display = 'none'
+				document.getElementById('modify').style.display = 'block'
+			})
+

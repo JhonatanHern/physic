@@ -1,0 +1,93 @@
+doctype html
+html
+	head
+		title QC Imagen
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		script const rif = '#{rif}'
+		if data.length
+			h2 QC Imagen
+			section.table-holder
+				table
+					thead
+						tr
+							th Tipo
+							th Ubic.
+							th Nº
+							th Evaluación 1
+							th Fecha Evaluación 1
+							th Obs. 1
+							th Evaluación 2
+							th Fecha Evaluación 2
+							th Obs. 2
+					tbody#t-body.clickable
+			script!= `const data = ${ JSON.stringify( data ) }`
+			script.
+				const tbody = document.getElementById( 't-body' )
+				data.forEach( e => {
+					const tr = document.createElement( 'tr' )
+					let keys = [//the keys must be ordered
+						'tipo',
+						'ubi',
+						'n',
+						'eval1',
+						'date1',
+						'obs1',
+						'eval2',
+						'date2',
+						'obs2'
+					]
+					keys.forEach(key=>{
+						let td = document.createElement('td')
+						switch(key){
+							case 'date1'://date formatting
+							case 'date2':
+								if ( e[ key ] ) {
+									td.innerText = e[ key ].split('T')[ 0 ].split('-').filter( ( e , i ) => i < 2 ).join('-')
+								}else{
+									td.innerText = 'N/D'
+								}
+								break
+							default:
+								td.innerText = e[ key ] ? e[ key ] : 'N/D'
+						}
+						tr.appendChild( td )
+					})
+					//the tr's are interactive, the next function handles this situation.
+					tr.addEventListener( 'click' , () => {
+						let w = open(
+							'/admin/modifyOrDeleteImagen?data=' +
+								encodeURIComponent( JSON.stringify( e ) ),
+							'',
+							"width=400,height=500"
+							)
+						let timer = setInterval( () => {
+							//this timer waits for the popup to close
+							//and reloads the current page
+							if( w.closed ) {  
+								clearInterval( timer )  
+								location.reload( )
+							}
+						} , 1000 )
+					})
+					tbody.appendChild( tr )
+				})
+		else
+			h2 no hay QC Imagen en esta clínica
+		br
+		button#create Nuevo QC Imagen
+		script.
+			document.getElementById( 'create' ).addEventListener( 'click' , e => {
+				let w = open( '/admin/newImagenForm?rif=' + encodeURIComponent( rif ) , "" , "width=400,height=500" )
+				let timer = setInterval( ( ) => {
+					//this timer waits for the popup to close
+					//and reloads the current page
+					if( w.closed ) {  
+						clearInterval( timer )  
+						location.reload( )
+					}
+				} , 1000 )
+			} )

@@ -1,0 +1,63 @@
+doctype html
+html
+	head
+		title Alterar Dispositivo
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		section#ask
+			button#modify-button Modificar QC Dispositivo
+			form(action="/admin/deleteDisp" method="POST")
+				input(type='hidden' name='n' id="delete-n")
+				input(type='hidden' name='rif' id="delete-rif")
+				input(type="submit" value='Eliminar QC Dispositivo')
+		section#modify(style="display:none")
+			h2 Modificar QC Dispositivo
+			form(method="POST" action="/admin/updateDisp" id='modify-equipement')
+				select(name='tipo')
+					option(value="Lentes") Lentes
+					option(value="Tiroides") Tiroides
+					option(value="Peto Estándar") Peto Estándar
+					option(value="Peto Completo") Peto Completo
+					option(value="Falda") Falda
+					option(value="Chaleco") Chaleco
+				input(placeholder="Ubicación" required name='ubi' maxlength='20')
+				input(type="hidden" name='n' maxlength='10')
+				select(name='eval1')
+					option(value='S') Sin Evaluar
+					option(value='A') Aprobado
+					option(value='R') Rechazado
+					option(value='O') En Observación
+				input(placeholder="Fecha Evaluación 1 (aaaa-mm)" name='date1' maxlength='7')
+				input(placeholder="Observación de la Evaluación 1" name='obs1' maxlength='20')
+				select(name='eval2')
+					option(value='S') Sin Evaluar
+					option(value='A') Aprobado
+					option(value='R') Rechazado
+					option(value='O') En Observación
+				input(placeholder="Fecha Evaluación 2 (aaaa-mm)" name='date2' maxlength='7')
+				input(placeholder="Observación de la Evaluación 2" name='obs2' maxlength='20')
+				input(name="rif_clinica" type="hidden")
+				input(type='submit')
+		script.
+			const chasis = JSON.parse( decodeURIComponent(
+				location.href.split( '?' )[ 1 ].split( '=' )[ 1 ]
+				))
+			document.getElementById( 'delete-n' ).value = chasis.n
+			document.getElementById( 'delete-rif' ).value = chasis.rif_clinica
+			document.getElementById( 'modify-button' ).addEventListener( 'click' , () => {
+				document.getElementById( 'ask' ).style.display = 'none'
+				document.getElementById( 'modify' ).style.display = 'block'
+			})
+			for( let key in chasis ){
+				let element = document.querySelector( '#modify [name="' + key + '"]' )
+				if( element ){
+					if( /^date\d$/.test( key ) && chasis[ key ] ){
+						element.value = chasis[ key ].split( '-01T' )[ 0 ]
+					}else{
+						element.value = chasis[ key ]
+					}
+				}
+			}

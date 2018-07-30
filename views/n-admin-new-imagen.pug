@@ -1,0 +1,32 @@
+doctype html
+html
+	head
+		title Nuevo QC Imagen
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		h2 Crear QC Imagen
+		form(method="POST" action='/admin/newImagen')
+			select(name='tipo')
+				option(value="Monitor") Monitor
+				option(value="CR") CR
+			input(placeholder="Ubicación" required name='ubi' maxlength='20')
+			input(placeholder="N°" required name='n' maxlength='10')
+			select(name='eval1')
+				option(value='S') Sin Evaluar
+				option(value='A') Aprobado
+				option(value='R') Rechazado
+				option(value='O') En Observación
+			input(placeholder="Fecha Evaluación 1 (aaaa-mm)" name='date1' maxlength='7')
+			input(placeholder="Observación de la Evaluación 1" name='obs1' maxlength='20')
+			select(name='eval2')
+				option(value='S') Sin Evaluar
+				option(value='A') Aprobado
+				option(value='R') Rechazado
+				option(value='O') En Observación
+			input(placeholder="Fecha Evaluación 2 (aaaa-mm)" name='date2' maxlength='7')
+			input(placeholder="Observación de la Evaluación 2" name='obs2' maxlength='20')
+			input(name="rif" type="hidden" value=rif)
+			input(type='submit')

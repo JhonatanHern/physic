@@ -7,14 +7,15 @@ const fs = require('fs'),
 	https = require('https')
 
 /*npm modules*/
-const express     = require("express"),
-	body_parser   = require("body-parser"),
-	cookieSession = require("cookie-session"),
-	compression   = require('compression')
+const cookieSession = require("cookie-session"),
+	body_parser     = require("body-parser"),
+	compression     = require('compression'),
+	express         = require("express")
 
 /*personalized modules*/
 const serofcaRouter = require('./modules/serofcaRouter'),//first-version router
 	adminRouter     = require('./modules/admin-router'),
+	prevent         = require('./modules/CSRFPrevent'),
 	validId         = require('./modules/idValidator'),  
 	physicistRouter = require('./modules/phy-router'),
 	mysql           = require('./modules/connection'),
@@ -26,7 +27,7 @@ const app = express()
 
 app.disable('x-powered-by')
 //remove this header so the client does not know
-//what tech is being used in the backend 
+//which tech is being used in the backend 
 app.use(compression())
 //compress data saving bandwidth
 app.use(express.static('./public' , { maxAge : cachingTime } ))
@@ -36,8 +37,8 @@ app.set('view engine', 'pug')
 app.use(cookieSession({
 	name:"session",
 	keys:[
-		"fjgvadshkfgasdjkfjoasdghwevbdaehbndfawegh9fuiwehdfuihedfuuetywt35687epgh'sjt",
-		'VSE%#/#%[]¨*¨P¨*¨¨¨h%&(%=$&(/&)"!%/!&()/?=)[*'
+		"FCLFNUNCJDHHDTG%RTYH/GHRFGT$#$bdv$$#/%#FGBJ#%%/$%/$ddybdeu",
+		'VSE%#/#%[]¨*¨P¨*¨¨¨hYHRYRHERHEFG45%&(%=$&(/&)"!%/!&()/?=)[*'
 	]
 }))
 
@@ -115,13 +116,13 @@ app.post("/serofcaLogin",(req,res) => {
 	}
 	let logQuery = "SELECT * FROM usuarios WHERE email=" + email + " AND password='"+password+"'"
 	con.query(logQuery,function(err,result){
-		if (err) {
+		if ( err ) {
 			console.log( err )
 			res.status(500)
 			res.render('error500')
 			return
 		}
-		if (result.length===0){
+		if ( result.length === 0 ){
 			res.render('badLogin')
 		}else{
 			req.session.id = result[0].id
@@ -152,7 +153,7 @@ app.use('/serofca',(req,res,next) => {//validating session
 app.use('/serofca',serofcaRouter)
 
 app.use('/physicist',(req,res,next) => {//validating session
-	if( req.session.physicist_id && Number(req.session.physicist_id) === req.session.physicist_id ){
+	if( prevent( req , 'serofcapp.hopto.org' ) && req.session.physicist_id && Number(req.session.physicist_id) === req.session.physicist_id ){
 		next( )
 	}else{
 		res.redirect( "/enterprise-login" )
@@ -161,7 +162,7 @@ app.use('/physicist',(req,res,next) => {//validating session
 app.use('/physicist',physicistRouter)
 
 app.use('/admin',(req,res,next) => {//validating session
-	if( req.session.admin_id && Number(req.session.admin_id) === req.session.admin_id ){
+	if( prevent( req , 'serofcapp.hopto.org' ) && req.session.admin_id && Number(req.session.admin_id) === req.session.admin_id ){
 		next( )
 	}else{
 		res.redirect( "/enterprise-login" )
@@ -196,13 +197,13 @@ if (httpsAvailable) {
 	let key = fs.readFileSync('certs/key.key','utf8'),
 		crt = fs.readFileSync('certs/crt.crt','utf8'),
 		credentials = {
-			key:key,
-			cert:crt
+			key : key,
+			cert : crt
 		}
 
 	let httpsServer = https.createServer(credentials,app)
 
-	httpsServer.listen(443,()=>{
+	httpsServer.listen( 443 , ( ) => {
 		console.log('https server working in port 443')
 	})
 }

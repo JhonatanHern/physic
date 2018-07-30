@@ -1,0 +1,21 @@
+doctype html
+html
+	head
+		title Nuevo Equipo
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		h2 Crear Equipo
+		form(method="POST" action="/admin/newEquipement")
+			input(placeholder="Nombre" name="nombre" required maxlength="60")
+			input(placeholder="Modelo" name="modelo" required maxlength="20")
+			input(placeholder="Serial" name="serie" required maxlength="25")
+			input(placeholder="Sala" name="sala" required maxlength="10")
+			input(placeholder="Marca" name="marca" required maxlength="30")
+			input(placeholder="Próximo QC (aaaa-mm)" name="ProxQc" required maxlength="7")
+			input(placeholder="Último QC (aaaa-mm)" name="UltimoQc" required maxlength="7")
+			textarea(placeholder="Observaciones" name="observaciones" maxlength="140")
+			input(type="hidden" name="rif" value=rif)
+			input(type='submit')
