@@ -1582,8 +1582,8 @@ router.delete("/eliminarClinica",function (req,res) {//delete for admins
 			con.query(sql,function(err) {
 				res.setHeader('Content-Type', 'application/json');
 				if (err) {
-					res.end('{"error":"clínica repetida"}');
-					//console.log(err);
+					res.end('{"error":"Error inesperado"}');
+					console.log(err);
 				}
 				res.end('{"success":true}');
 			});
@@ -1878,8 +1878,8 @@ router.get('/actsFromMonth',function(req,res) {
 router.get('/allclinics',function (req,res) {
 	let sql = 'SELECT rif,nombre,emails,prox_visita,not_visita_fisico,llamada,reporte_actividades,recibido_mcast,enviado_informe_serofca,recibido_servicio_serofca,enviado_centro_Salud,obs FROM clinicas';
 	con.query(sql,function(err,data) {
-		console.log(err);
 		if (err) {
+			console.log(err);
 			res.end('{"error":"in query"}');
 			return;
 		}

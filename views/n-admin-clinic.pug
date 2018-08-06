@@ -89,7 +89,9 @@ html
 			input(type="hidden" name="rif")
 			br
 			input(type='submit', value='Enviar')
-
+		a#change-physicist Cambiar encargado del centro
+		br
+		a#delete-clinic Eliminar centro
 		script.
 			Array.from(document.getElementsByClassName('watch')).forEach(e=>{
 				e.addEventListener('click',()=>{
@@ -247,3 +249,15 @@ html
 				})
 				document.querySelector('input[name="rif"]').value = decodeURIComponent(location.search.split('=')[1])
 			})
+		script.
+			document.getElementById('change-physicist').addEventListener('click',e=>{
+				open('changePhysicist?rif='+(location.search.split('=')[1]),'',"width=400,height=500")
+			})
+			document.getElementById('delete-clinic').addEventListener('click',e=>{
+				if(confirm('¿Realmente desea eliminar el centro?')){
+
+				}else{
+					e.preventDefault()
+				}
+			})
+			document.getElementById('delete-clinic').href = '/admin/deleteClinic?rif=' + location.search.split('=')[1]

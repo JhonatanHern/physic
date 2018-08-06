@@ -33,6 +33,7 @@ body{
 a{
 	color: inherit;
 	text-decoration: underline;
+	cursor: pointer;
 }
 a.button-like{
 	background-color: rgb(247,147,29);

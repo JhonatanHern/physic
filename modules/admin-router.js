@@ -252,8 +252,18 @@ const cleanFileName = str => str.split('/').join('').split('.').join('')
 			return
 		}
 	})
-	router.get('/uploadRep' , ( req , res ) => {
-		res.render( 'n-admin-upload-report' , req.query )
+	router.get('/changePhysicist' , async ( req , res ) => {
+		try{
+			let data = await asyncQuery("SELECT email,id FROM usuarios WHERE userClass = 'P'")
+			res.render('n-admin-change-physicist',{
+				data : data,
+				rif : req.query.rif
+			})
+		}catch(e){
+			console.log(e)
+			res.render('error500')
+			return
+		}
 	})
 /*
  * part 3 of the code (get requests of JSON data):
@@ -559,6 +569,22 @@ const cleanFileName = str => str.split('/').join('').split('.').join('')
 /*
  * part 6 of the code (Update):
 */
+	router.post('/changePhysicist',async (req,res)=>{
+		try{
+			await asyncQuery(`
+				UPDATE clinicas
+				SET id_encargado=${Number.parseInt(req.body.physicist_id)}
+				WHERE rif=${mysql.escape(req.body.rif)}
+				`)
+			res.render('n-success-message',{
+				message:'Encargado modificado'
+			})
+		}catch(e){
+			console.log(e)
+			res.render('error500')
+			return
+		}
+	})
 	router.post('/updateEquipement',(req,res)=>{
 		const { serie , nombre , marca , modelo , sala , UltimoQc , ProxQc , observaciones } = req.body
 		const esc = mysql.escape//shorthand for mysql.escape
@@ -746,7 +772,27 @@ const cleanFileName = str => str.split('/').join('').split('.').join('')
 /*
  * part 7 of the code (Delete):
 */
-	router.post( '/deleteEquipemement',(req,res)=>{
+	router.get( '/deleteClinic' , ( req , res) => {
+		const rif = mysql.escape(req.query.rif)
+		Promise.all([
+				'actividad WHERE rif_clinica =',
+				'qcchasis WHERE rif_clinica =',
+				'qcimagen WHERE rif_clinica =',
+				'equipos WHERE rif_clinica =',
+				'qcdisp WHERE rif_clinica =',
+				'salas WHERE rif_clinica =',
+				'clinicas WHERE rif ='
+			].map(sql=>asyncQuery("DELETE FROM "+sql+rif)))
+			.then(values=>{
+				res.render('n-success-message',{
+					message:'Clínica Eliminada'
+				})
+			}).catch(reason => { 
+				console.log(reason)
+				res.render('error500')
+			})
+	})
+	router.post( '/deleteEquipemement' , ( req , res) => {
 		if (!req.body.serie) {
 			res.end('serial faltante')
 			return

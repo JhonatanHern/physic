@@ -1,0 +1,17 @@
+doctype html
+html
+	head
+		title Cambiar físico asignado
+		meta(charset="utf-8")
+		link(rel="shortcut icon" href="/favicon.ico")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		link(rel="stylesheet" href='/css/v2-template.css')
+	body
+		h2 Seleccione al físico
+		form(action="/admin/changePhysicist" method="POST")
+			select(name='physicist_id')
+				!="<option disabled selected>Seleccionar Físico</option>"
+				-for (var i = data.length - 1; i >= 0; i--)
+					option(value=data[i].id) #{data[i].email}
+			input(type="hidden" name="rif" value=rif)
+			input(type="submit" value="Enviar")

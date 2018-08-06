@@ -3,7 +3,7 @@ const mysql = require('./modules/connection')
 
 const con = mysql.connection
 const year = 2018
-const month = 6
+const month = process.argv[2] || (new Date()).getMonth() + 1
 
 async function query(sql) {
 	return new Promise((successCallback,errorCallback)=>{
